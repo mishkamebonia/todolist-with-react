@@ -2,29 +2,37 @@ import { useEffect, useState } from "react";
 import "./App.css";
 
 type Todo = {
+  completed: boolean;
   id: number;
-  title: string;
+  todo: string;
+  userId: number;
 };
 
-const initialTodos = JSON.parse(localStorage.getItem("todos") || "[]");
 function App() {
-  const [todos, setTodos] = useState<Todo[]>(initialTodos);
+  const [todos, setTodos] = useState<Todo[]>([]);
   const [value, setValue] = useState<string>("");
 
   useEffect(() => {
-    localStorage.setItem("todos", JSON.stringify(todos));
-  }, [todos]);
+    fetch("https://dummyjson.com/todos")
+      .then((res) => res.json())
+      .then((data) => {
+        setTodos(data.todos);
+        console.log(data.todos);
+      });
+  }, []);
 
   function addNewItem(event: React.SyntheticEvent) {
     event.preventDefault();
 
     if (value !== "") {
       const newItems = [
-        ...todos,
         {
+          completed: false,
           id: Date.now(),
-          title: value,
+          todo: value,
+          userId: Date.now(),
         },
+        ...todos,
       ];
       setTodos(newItems);
     }
@@ -33,6 +41,12 @@ function App() {
   }
 
   function removeItem(id: number) {
+    fetch("https://dummyjson.com/todos/" + id, {
+      method: "DELETE",
+    })
+      .then((res) => res.json())
+      .then(console.log);
+
     const newTodos = todos.filter((item) => item.id !== id);
     setTodos(newTodos);
   }
@@ -78,7 +92,7 @@ function App() {
         {todos.map((todo) => {
           return (
             <div key={todo.id} className="todos">
-              <p>{todo.title}</p>
+              <p>{todo.todo}</p>
               <button onClick={() => removeItem(todo.id)}>remove</button>
               <button onClick={() => editItem(todo.id)}>edit</button>
             </div>
