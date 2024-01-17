@@ -1,13 +1,19 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 
 type Todo = {
   id: number;
   title: string;
 };
+
+const initialTodos = JSON.parse(localStorage.getItem("todos") || "[]");
 function App() {
-  const [todos, setTodos] = useState<Todo[]>([]);
+  const [todos, setTodos] = useState<Todo[]>(initialTodos);
   const [value, setValue] = useState<string>("");
+
+  useEffect(() => {
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }, [todos]);
 
   function addNewItem(event: React.SyntheticEvent) {
     event.preventDefault();
