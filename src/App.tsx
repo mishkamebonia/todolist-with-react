@@ -4,7 +4,6 @@ import "./App.css";
 type Todo = {
   id: number;
   title: string;
-  checked: boolean;
 };
 function App() {
   const [todos, setTodos] = useState<Todo[]>([]);
@@ -19,7 +18,6 @@ function App() {
         {
           id: Date.now(),
           title: value,
-          checked: false,
         },
       ];
       setTodos(newItems);
