@@ -41,7 +41,20 @@ function App() {
     getTodoList();
   });
 
-  function addNewItem(event: React.SyntheticEvent) {}
+  const addNewItem = async () => {
+    try {
+      if (newValue !== "") {
+        await addDoc(todosCollectionRef, {
+          text: newValue,
+        });
+      }
+
+      getTodoList();
+      setNewValue("");
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   function removeItem(id: number) {}
 
@@ -49,14 +62,14 @@ function App() {
 
   return (
     <>
-      <form action="" onSubmit={addNewItem}>
+      <div>
         <input
           type="text"
           value={newValue}
           onChange={(e) => setNewValue(e.target.value)}
         />
-        <button>add</button>
-      </form>
+        <button onClick={addNewItem}>add</button>
+      </div>
       <div className="output">
         {todos.map((todo) => {
           return (
