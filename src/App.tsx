@@ -56,9 +56,12 @@ function App() {
     }
   };
 
-  function removeItem(id: number) {}
+  const removeItem = async (id: string) => {
+    const todoDoc = doc(db, "todolist", id);
+    await deleteDoc(todoDoc);
+  };
 
-  function editItem(id: number) {}
+  function editItem(id: string) {}
 
   return (
     <>
