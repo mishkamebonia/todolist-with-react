@@ -1,16 +1,45 @@
 import { useEffect, useState } from "react";
+import { db } from "./config/firebase";
+import {
+  getDocs,
+  collection,
+  addDoc,
+  deleteDoc,
+  doc,
+  getDoc,
+} from "firebase/firestore";
 import "./App.css";
 
 type Todo = {
-  completed: boolean;
-  id: number;
-  todo: string;
-  userId: number;
+  id: string;
+  text: string;
 };
 
 function App() {
   const [todos, setTodos] = useState<Todo[]>([]);
-  const [value, setValue] = useState<string>("");
+  const [newValue, setNewValue] = useState<string>("");
+
+  const todosCollectionRef = collection(db, "todolist");
+
+  const getTodoList = async () => {
+    try {
+      const data = await getDocs(todosCollectionRef);
+
+      const filteredData: Todo[] = data.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+        text: doc.data().text,
+      }));
+
+      setTodos(filteredData);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    getTodoList();
+  });
 
   function addNewItem(event: React.SyntheticEvent) {}
 
@@ -23,8 +52,8 @@ function App() {
       <form action="" onSubmit={addNewItem}>
         <input
           type="text"
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
+          value={newValue}
+          onChange={(e) => setNewValue(e.target.value)}
         />
         <button>add</button>
       </form>
@@ -32,7 +61,7 @@ function App() {
         {todos.map((todo) => {
           return (
             <div key={todo.id} className="todos">
-              <p>{todo.todo}</p>
+              <p>{todo.text}</p>
               <button onClick={() => removeItem(todo.id)}>remove</button>
               <button onClick={() => editItem(todo.id)}>edit</button>
             </div>
