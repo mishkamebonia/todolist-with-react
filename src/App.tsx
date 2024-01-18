@@ -12,71 +12,11 @@ function App() {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [value, setValue] = useState<string>("");
 
-  useEffect(() => {
-    fetch("https://dummyjson.com/todos")
-      .then((res) => res.json())
-      .then((data) => {
-        setTodos(data.todos);
-        console.log(data.todos);
-      });
-  }, []);
+  function addNewItem(event: React.SyntheticEvent) {}
 
-  function addNewItem(event: React.SyntheticEvent) {
-    event.preventDefault();
+  function removeItem(id: number) {}
 
-    if (value !== "") {
-      const newItems = [
-        {
-          completed: false,
-          id: Date.now(),
-          todo: value,
-          userId: Date.now(),
-        },
-        ...todos,
-      ];
-      setTodos(newItems);
-    }
-
-    setValue("");
-  }
-
-  function removeItem(id: number) {
-    fetch("https://dummyjson.com/todos/" + id, {
-      method: "DELETE",
-    })
-      .then((res) => res.json())
-      .then(console.log);
-
-    const newTodos = todos.filter((item) => item.id !== id);
-    setTodos(newTodos);
-  }
-
-  function editItem(id: number) {
-    const editInput = window.prompt("edit");
-
-    if (editInput === null) {
-      return;
-    }
-
-    // find editing todo
-    // update todo name
-    // update todo list
-
-    if (editInput !== "") {
-      const newTodos = todos.map((item) => {
-        if (item.id === id) {
-          return {
-            ...item,
-            title: editInput,
-          };
-        }
-
-        return item;
-      });
-
-      setTodos(newTodos);
-    }
-  }
+  function editItem(id: number) {}
 
   return (
     <>
