@@ -39,7 +39,7 @@ function App() {
 
   useEffect(() => {
     getTodoList();
-  });
+  }, []);
 
   const addNewItem = async () => {
     try {
