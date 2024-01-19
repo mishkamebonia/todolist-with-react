@@ -57,8 +57,14 @@ function App() {
   };
 
   const removeItem = async (id: string) => {
-    const todoDoc = doc(db, "todolist", id);
-    await deleteDoc(todoDoc);
+    try {
+      setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
+
+      const todoDoc = doc(db, "todolist", id);
+      await deleteDoc(todoDoc);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   function editItem(id: string) {}
